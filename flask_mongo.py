@@ -31,15 +31,6 @@ class User(db.Document):
     updated_at = db.DateTimeField()
     status = db.IntField()
 
-    # def __init__(self,  username,  password , email, mobile_no,  profile_image, created_at,  updated_at,  status):
-
-    #     self.username = username
-    #     self.password = password
-    #     self.email = email
-    #     self.mobile_no = mobile_no
-    #     self.profile_image = profile_image
-    #     self.created_at = created_at
-    #     self.updated_at = updated_at
 
     def to_json(self):
         return {"username": self.username,
@@ -73,7 +64,7 @@ def users():
     """
     
     page  = int(request.args.get('page',1))
-    limit = int(request.args.get('limit',10))
+    limit = int(request.args.get('limit',5))
     
     users = User.objects(status=1).paginate(page=page,per_page=limit)
     if not users:
@@ -97,7 +88,7 @@ def create_user():
     user = request.form #user form
     #check file upload or not
     if 'file' not in request.files:
-        return jsonify({'error':"File Not Found"})
+        return jsonify({'status': 'failed','error':"File Not Found"})
 
     #File upload into folder   
     file = request.files['file']
@@ -142,27 +133,26 @@ def update_user():
 
     record = User.objects(username=user['username']).first()
 
-    #File upload into folder
-    if request.files:
-        
-        profile_image = record.profile_image
-        
-        os.unlink(profile_image) #unlink previous file
-        
-        file = request.files['file']
-        filename = secure_filename(file.filename)
-        filename = str(int(time.time())) + "_" + filename
-        file_folder = file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        profile_image = UPLOAD_FOLDER+"/"+  filename
-
-    
-
     if not record:
-        return jsonify({'error': 'data not found'})
+        return jsonify({'status': 'failed','error': 'user not found'})
     else:
+        #File upload into folder
+        if request.files:
+            
+            profile_image = record.profile_image
+            
+            os.unlink(profile_image) #unlink previous file
+            
+            file = request.files['file']
+            filename = secure_filename(file.filename)
+            filename = str(int(time.time())) + "_" + filename
+            file_folder = file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            profile_image = UPLOAD_FOLDER+"/"+  filename
+        
         record.update(profile_image=profile_image, updated_at=datetime.datetime.now(), **user)
         record = User.objects(username=user['username']).first()
-    return jsonify(record.to_json())
+    
+    return jsonify({'status': 'success','messgage':'User data Updated Successfully!.'})
 
 
 @app.route('/user', methods=['DELETE'])
@@ -183,7 +173,7 @@ def delete_user():
 
     user = User.objects(username=user['username']).first()
     if not user:
-        return jsonify({'error': 'data not found'})
+        return jsonify({'status': 'failed','error': 'data not found'})
     else:
         user.update(status=2)
     return jsonify({'status':'success',"message":"User Deleted Successfully!."})
