@@ -33,16 +33,26 @@ Database -  usermanagement
 (env)$ gunicorn --bind 0.0.0.0:8000 wsgi:app
 ```
 
-And navigate to `http://127.0.0.1:8000/`.
+And navigate to 
+```sh
+`http://127.0.0.1:8000/`.
+```
+with pagination -  e.g 
 
-with pagination -  e.g `http://127.0.0.1:8000/?page=1&limit=2`
+```sh
+  `http://127.0.0.1:8000/?page=1&limit=2`
+```
 
+Postman Collection link 
+```sh
+`https://www.getpostman.com/collections/cf2c0b6e12c1e4d92f24`
+```
 
-Postman Collection link : `https://www.getpostman.com/collections/cf2c0b6e12c1e4d92f24`
+You can then import this link into Postman 
 
-
-You can then import this link into Postman ("Import -> Link")
-
+```sh
+("Import -> Link")
+```
 
 Run Test case file
 
