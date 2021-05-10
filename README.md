@@ -25,9 +25,14 @@ session operates in a virtual environment set up by `venv`.
 
 Once `pip` has finished downloading the dependencies:
 
-Cloud Mongodb
--------------
+Used Cloud Mongo db
+-------------------
+
+```sh
 Database -  usermanagement 
+```
+
+To Run
 
 ```sh
 (env)$ gunicorn --bind 0.0.0.0:8000 wsgi:app
@@ -40,7 +45,7 @@ And navigate to
 with pagination -  e.g 
 
 ```sh
-  `http://127.0.0.1:8000/?page=1&limit=2`
+`http://127.0.0.1:8000/?page=1&limit=2`
 ```
 
 Postman Collection link 
