@@ -1,6 +1,5 @@
-# flask_crud_mongo_orm
 # user_management_system
-User management system - Flask
+User management system - Flask Mongo Db ORM
 ## Setup
 
 The first thing to do is to clone the repository:
