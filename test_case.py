@@ -5,11 +5,19 @@ import os
 import sys
 import datetime
 from flask_mongo import app
-file = app.config['UPLOAD_FOLDER'] + '/' + '1620591392_dummy-profile-image.png' 
+
+filename = '1620591392_dummy-profile-image.png'
+file = os.path.join(app.config['UPLOAD_FOLDER'], filename) 
 
 image = FileStorage(
     stream=open(file, "rb"),
     filename="1620591392_dummy-profile-image.png",
+    content_type="jpeg/png/jpg",
+),
+
+edit_image = FileStorage(
+    stream=open(file, "rb"),
+    filename="1620591392_dummy-profile-image-edit.png",
     content_type="jpeg/png/jpg",
 ),
 
@@ -32,6 +40,7 @@ class TestUsers(unittest.TestCase):
                 mobile_no=1234567890,
                 file =  image,
                 ),content_type="multipart/form-data", follow_redirects=True)
+        print(rv.data)
         assert rv.status_code == 200
 
     def test_02_Update(self):
@@ -40,22 +49,24 @@ class TestUsers(unittest.TestCase):
             
             rv = self.app.put(
                 '/user', data=dict(
-                    username='Test updated',
+                    username = 'Test',
                     email='test_update@gmail.com',
                     password = 'test_update@1234',
-                    mobile_no=1234567890,
-                    file='profile_images/1620591392_dummy-profile-image.png',
-                    ), follow_redirects=True)
-            assert rv.status_code == 200
+                    mobile_no='1234567890',
+                    file =  edit_image,
+                    ),content_type="multipart/form-data", follow_redirects=True)
+            print(rv.data)
+            assert "success" in rv.data.decode('utf-8')
 
     def test_03_delete(self):
         with app.app_context():
             
             rv = self.app.delete(
                 '/user', data=dict(
-                    username='Test updated',
+                    username='Test',
                 ),follow_redirects=True)
-            assert rv.status_code == 200
+            print(rv.data)
+            assert "success" in rv.data.decode('utf-8')
 
 if __name__ == '__main__':
     unittest.main()
