@@ -86,6 +86,7 @@ def create_user():
     """
     
     user = request.form #user form
+    
     #check file upload or not
     if 'file' not in request.files:
         return jsonify({'status': 'failed','error':"File Not Found"})
@@ -133,14 +134,13 @@ def update_user():
 
     record = User.objects(username=user['username']).first()
 
+    profile_image = record.profile_image
+    
     if not record:
         return jsonify({'status': 'failed','error': 'user not found'})
     else:
         #File upload into folder
         if request.files:
-            
-            profile_image = record.profile_image
-            
             os.unlink(profile_image) #unlink previous file
             
             file = request.files['file']
