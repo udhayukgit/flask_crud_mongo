@@ -1,4 +1,4 @@
-from flask_mongo import app
+from usermanagement import app
 
 if __name__ == "__main__":
     app.run()
